@@ -9,6 +9,10 @@
 # move said applications out of the umbrella.
 import Config
 
+# Configure Mix tasks and generators
+config :database,
+  ecto_repos: [Database.Repo]
+
 config :web_interface,
   generators: [context_app: false]
 
