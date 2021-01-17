@@ -16,6 +16,9 @@ defmodule Api.MixProject do
   #
   # Run "mix help deps" for examples and options.
   defp deps do
-    [{:mix_test_watch, "~> 1.0", only: :dev, runtime: false}]
+    [
+      {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
+    ]
   end
 end
