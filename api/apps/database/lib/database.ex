@@ -1,4 +1,4 @@
-defmodule Database do
+defmodule Rushing.Database do
   @moduledoc """
   Database keeps the contexts that define your domain
   and business logic.

@@ -9,6 +9,12 @@
 # move said applications out of the umbrella.
 import Config
 
+config :database, Rushing.Database.Repo,
+  database: "database_repo",
+  username: "user",
+  password: "pass",
+  hostname: "localhost"
+
 # Configure Mix tasks and generators
 config :database,
   ecto_repos: [Rushing.Database.Repo]
