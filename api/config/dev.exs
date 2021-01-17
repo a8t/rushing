@@ -1,7 +1,7 @@
 use Mix.Config
 
 # Configure your database
-config :database, Database.Repo,
+config :database, Rushing.Database.Repo,
   username: "postgres",
   password: "postgres",
   database: "database_dev",

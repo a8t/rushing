@@ -11,7 +11,7 @@ import Config
 
 # Configure Mix tasks and generators
 config :database,
-  ecto_repos: [Database.Repo]
+  ecto_repos: [Rushing.Database.Repo]
 
 config :web_interface,
   generators: [context_app: false]

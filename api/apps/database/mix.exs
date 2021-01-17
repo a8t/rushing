@@ -1,4 +1,4 @@
-defmodule Database.MixProject do
+defmodule Rushing.Database.MixProject do
   use Mix.Project
 
   def project do
@@ -22,7 +22,7 @@ defmodule Database.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Database.Application, []},
+      mod: {Rushing.Database.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
