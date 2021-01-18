@@ -1,4 +1,4 @@
-defmodule Rushing.Database.RushingStatistic do
+defmodule Database.RushingStatistic do
   use Ecto.Schema
 
   schema "rushing_statistics" do

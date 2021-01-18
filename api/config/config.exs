@@ -9,7 +9,7 @@
 # move said applications out of the umbrella.
 import Config
 
-config :database, Rushing.Database.Repo,
+config :database, Database.Repo,
   database: "database_repo",
   username: "user",
   password: "pass",
@@ -17,18 +17,20 @@ config :database, Rushing.Database.Repo,
 
 # Configure Mix tasks and generators
 config :database,
-  ecto_repos: [Rushing.Database.Repo]
+  ecto_repos: [Database.Repo]
 
-config :web_interface,
+
+config :rushing_web,
   generators: [context_app: false]
 
 # Configures the endpoint
-config :web_interface, WebInterface.Endpoint,
+config :rushing_web, RushingWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "xoiYghdOAjm3RT3CnxaB3KbpOw8pW9V4cL7TmppmQrWyZOs2NoF8GzRKbXQIBDmc",
-  render_errors: [view: WebInterface.ErrorView, accepts: ~w(json), layout: false],
-  pubsub_server: WebInterface.PubSub,
-  live_view: [signing_salt: "WwAyNu3R"]
+  secret_key_base: "SAGBkEAtt/+GUZ0rn/NMUL2hHWEX3zq2fJ4wD+478XH6yhaQntTXRdkNHFqARFwh",
+  render_errors: [view: RushingWeb.ErrorView, accepts: ~w(json), layout: false],
+  pubsub_server: RushingWeb.PubSub,
+  live_view: [signing_salt: "nF6VFXE2"]
+
 
 # Sample configuration:
 #
@@ -45,6 +47,9 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+# Don't generate models
+config :phoenix, :generators, model: false
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

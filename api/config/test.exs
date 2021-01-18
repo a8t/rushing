@@ -5,7 +5,7 @@ use Mix.Config
 # The MIX_TEST_PARTITION environment variable can be used
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
-config :database, Rushing.Database.Repo,
+config :database, Database.Repo,
   username: "postgres",
   password: "postgres",
   database: "database_test#{System.get_env("MIX_TEST_PARTITION")}",
@@ -14,6 +14,6 @@ config :database, Rushing.Database.Repo,
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :web_interface, WebInterface.Endpoint,
+config :rushing_web, RushingWeb.Endpoint,
   http: [port: 4002],
   server: false

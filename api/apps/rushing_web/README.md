@@ -1,4 +1,4 @@
-# WebInterface
+# RushingWeb
 
 To start your Phoenix server:
 

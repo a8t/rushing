@@ -1,4 +1,4 @@
-defmodule WebInterface.Telemetry do
+defmodule RushingWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -42,7 +42,7 @@ defmodule WebInterface.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {WebInterface, :count_users, []}
+      # {RushingWeb, :count_users, []}
     ]
   end
 end

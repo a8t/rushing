@@ -1,9 +1,9 @@
-defmodule WebInterface.ChannelCase do
+defmodule RushingWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
-  channel tests.
+  tests that require setting up a connection.
 
-  Such tests rely on `Phoenix.ChannelTest` and also
+  Such tests rely on `Phoenix.ConnTest` and also
   import other functionality to make it easier
   to build common data structures and query the data layer.
 
@@ -11,7 +11,7 @@ defmodule WebInterface.ChannelCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use WebInterface.ChannelCase, async: true`, although
+  by setting `use RushingWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -19,16 +19,19 @@ defmodule WebInterface.ChannelCase do
 
   using do
     quote do
-      # Import conveniences for testing with channels
-      import Phoenix.ChannelTest
-      import WebInterface.ChannelCase
+      # Import conveniences for testing with connections
+      import Plug.Conn
+      import Phoenix.ConnTest
+      import RushingWeb.ConnCase
+
+      alias RushingWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint WebInterface.Endpoint
+      @endpoint RushingWeb.Endpoint
     end
   end
 
   setup _tags do
-    :ok
+    {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

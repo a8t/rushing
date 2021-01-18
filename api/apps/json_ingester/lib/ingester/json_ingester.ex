@@ -1,6 +1,6 @@
 defmodule Rushing.JsonIngester do
-  alias Rushing.Database.RushingStatistic, as: RushingStatistic
-  alias Rushing.Database.Repo
+  alias Database.RushingStatistic, as: RushingStatistic
+  alias Database.Repo
 
   def ingest_json(arg) do
     File.read!(arg)

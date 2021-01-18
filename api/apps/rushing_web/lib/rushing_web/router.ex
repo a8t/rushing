@@ -1,11 +1,11 @@
-defmodule WebInterface.Router do
-  use WebInterface, :router
+defmodule RushingWeb.Router do
+  use RushingWeb, :router
 
   pipeline :api do
     plug :accepts, ["json"]
   end
 
-  scope "/api", WebInterface do
+  scope "/api", RushingWeb do
     pipe_through :api
   end
 
@@ -21,7 +21,7 @@ defmodule WebInterface.Router do
 
     scope "/" do
       pipe_through [:fetch_session, :protect_from_forgery]
-      live_dashboard "/dashboard", metrics: WebInterface.Telemetry
+      live_dashboard "/dashboard", metrics: RushingWeb.Telemetry
     end
   end
 end

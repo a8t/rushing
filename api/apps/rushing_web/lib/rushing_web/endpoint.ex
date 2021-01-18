@@ -1,16 +1,16 @@
-defmodule WebInterface.Endpoint do
-  use Phoenix.Endpoint, otp_app: :web_interface
+defmodule RushingWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :rushing_web
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_web_interface_key",
-    signing_salt: "BVCrnnKq"
+    key: "_rushing_web_key",
+    signing_salt: "Fz/0cvI2"
   ]
 
-  socket "/socket", WebInterface.UserSocket,
+  socket "/socket", RushingWeb.UserSocket,
     websocket: true,
     longpoll: false
 
@@ -22,7 +22,7 @@ defmodule WebInterface.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :web_interface,
+    from: :rushing_web,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
@@ -47,5 +47,5 @@ defmodule WebInterface.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug WebInterface.Router
+  plug RushingWeb.Router
 end

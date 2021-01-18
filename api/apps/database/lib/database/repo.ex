@@ -1,4 +1,4 @@
-defmodule Rushing.Database.Repo do
+defmodule Database.Repo do
   use Ecto.Repo,
     otp_app: :database,
     adapter: Ecto.Adapters.Postgres

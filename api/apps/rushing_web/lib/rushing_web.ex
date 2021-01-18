@@ -1,12 +1,12 @@
-defmodule WebInterface do
+defmodule RushingWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use WebInterface, :controller
-      use WebInterface, :view
+      use RushingWeb, :controller
+      use RushingWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,19 +19,19 @@ defmodule WebInterface do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: WebInterface
+      use Phoenix.Controller, namespace: RushingWeb
 
       import Plug.Conn
-      import WebInterface.Gettext
-      alias WebInterface.Router.Helpers, as: Routes
+      import RushingWeb.Gettext
+      alias RushingWeb.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/web_interface/templates",
-        namespace: WebInterface
+        root: "lib/rushing_web/templates",
+        namespace: RushingWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -54,7 +54,7 @@ defmodule WebInterface do
   def channel do
     quote do
       use Phoenix.Channel
-      import WebInterface.Gettext
+      import RushingWeb.Gettext
     end
   end
 
@@ -63,9 +63,9 @@ defmodule WebInterface do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import WebInterface.ErrorHelpers
-      import WebInterface.Gettext
-      alias WebInterface.Router.Helpers, as: Routes
+      import RushingWeb.ErrorHelpers
+      import RushingWeb.Gettext
+      alias RushingWeb.Router.Helpers, as: Routes
     end
   end
 

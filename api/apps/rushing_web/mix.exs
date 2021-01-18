@@ -1,9 +1,9 @@
-defmodule WebInterface.MixProject do
+defmodule RushingWeb.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :web_interface,
+      app: :rushing_web,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -23,7 +23,7 @@ defmodule WebInterface.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {WebInterface.Application, []},
+      mod: {RushingWeb.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end

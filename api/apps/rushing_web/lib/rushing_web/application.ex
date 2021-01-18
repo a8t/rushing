@@ -1,4 +1,4 @@
-defmodule WebInterface.Application do
+defmodule RushingWeb.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,23 +8,23 @@ defmodule WebInterface.Application do
   def start(_type, _args) do
     children = [
       # Start the Telemetry supervisor
-      WebInterface.Telemetry,
+      RushingWeb.Telemetry,
       # Start the Endpoint (http/https)
-      WebInterface.Endpoint
-      # Start a worker by calling: WebInterface.Worker.start_link(arg)
-      # {WebInterface.Worker, arg}
+      RushingWeb.Endpoint
+      # Start a worker by calling: RushingWeb.Worker.start_link(arg)
+      # {RushingWeb.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: WebInterface.Supervisor]
+    opts = [strategy: :one_for_one, name: RushingWeb.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    WebInterface.Endpoint.config_change(changed, removed)
+    RushingWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

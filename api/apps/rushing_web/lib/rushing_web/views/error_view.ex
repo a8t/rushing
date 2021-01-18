@@ -1,5 +1,5 @@
-defmodule WebInterface.ErrorView do
-  use WebInterface, :view
+defmodule RushingWeb.ErrorView do
+  use RushingWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
