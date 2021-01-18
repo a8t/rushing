@@ -2,7 +2,7 @@ defmodule Rushing.Json_IngesterTest do
   use ExUnit.Case
   doctest Rushing.JsonIngester
 
-  alias Database.RushingStatistic, as: RushingStatistic
+  alias Database.Rushing.RushingStatistic, as: RushingStatistic
   alias Database.Repo
 
   import Ecto.Query, only: [from: 2]
