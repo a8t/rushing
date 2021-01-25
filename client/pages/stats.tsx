@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { useSortBy, useTable } from "react-table";
+import { usePagination, useSortBy, useTable } from "react-table";
 
 export async function getServerSideProps({ query }) {
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/rushing_statistics";
@@ -63,11 +63,22 @@ export default function Stats({ stats }) {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
     prepareRow,
-  } = useTable({ columns, data: memoizedData }, useSortBy);
-
-  const firstPageRows = rows.slice(0, 20);
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    { columns, data: memoizedData, initialState: { pageIndex: 0 } },
+    useSortBy,
+    usePagination
+  );
 
   return (
     <div
@@ -100,77 +111,88 @@ export default function Stats({ stats }) {
                     <thead className="bg-gray-50">
                       {headerGroups.map((headerGroup) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
-                          {
-                            // Loop over the headers in each row
-
-                            headerGroup.headers.map((column) => (
-                              // Apply the header cell props
-
-                              <th
-                                {...column.getHeaderProps(
-                                  column.getSortByToggleProps()
-                                )}
-                                scope="col"
-                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                              >
-                                {column.render("Header")}
-                                <span>
-                                  {column.isSorted
-                                    ? column.isSortedDesc
-                                      ? " 🔽"
-                                      : " 🔼"
-                                    : ""}
-                                </span>
-                              </th>
-                            ))
-                          }
+                          {headerGroup.headers.map((column) => (
+                            <th
+                              {...column.getHeaderProps(
+                                column.getSortByToggleProps()
+                              )}
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                            >
+                              {column.render("Header")}
+                              <span>
+                                {column.isSorted
+                                  ? column.isSortedDesc
+                                    ? " 🔽"
+                                    : " 🔼"
+                                  : ""}
+                              </span>
+                            </th>
+                          ))}
                         </tr>
                       ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                      {
-                        // Loop over the table rows
+                      {page.map((row, index) => {
+                        prepareRow(row);
+                        const isDarkRow = index % 2 === 0;
 
-                        firstPageRows.map((row, index) => {
-                          // Prepare the row for display
-
-                          prepareRow(row);
-
-                          const isDarkRow = index % 2 === 0;
-
-                          return (
-                            // Apply the row props
-
-                            <tr
-                              {...row.getRowProps()}
-                              className={isDarkRow ? "bg-gray-50" : "bg-white"}
-                            >
-                              {
-                                // Loop over the rows cells
-
-                                row.cells.map((cell) => {
-                                  // Apply the cell props
-
-                                  return (
-                                    <td
-                                      {...cell.getCellProps()}
-                                      className="px-6 py-4 whitespace-nowrap text-sm  text-gray-900"
-                                    >
-                                      {
-                                        // Render the cell contents
-
-                                        cell.render("Cell")
-                                      }
-                                    </td>
-                                  );
-                                })
-                              }
-                            </tr>
-                          );
-                        })
-                      }
+                        return (
+                          <tr
+                            {...row.getRowProps()}
+                            className={isDarkRow ? "bg-gray-50" : "bg-white"}
+                          >
+                            {row.cells.map((cell) => {
+                              return (
+                                <td
+                                  {...cell.getCellProps()}
+                                  className="px-6 py-4 whitespace-nowrap text-sm  text-gray-900"
+                                >
+                                  {cell.render("Cell")}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
+                  <nav
+                    className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
+                    aria-label="Pagination"
+                  >
+                    <div className="hidden sm:block">
+                      <p className="text-sm text-gray-700">
+                        Showing{" "}
+                        <span className="font-medium">
+                          {pageIndex * pageSize + 1}
+                        </span>{" "}
+                        to{" "}
+                        <span className="font-medium">
+                          {(pageIndex + 1) * pageSize}
+                        </span>{" "}
+                        of{" "}
+                        <span className="font-medium">
+                          {memoizedData.length}
+                        </span>{" "}
+                        results
+                      </p>
+                    </div>
+                    <div className="flex-1 flex justify-between sm:justify-end">
+                      <button
+                        onClick={previousPage}
+                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        onClick={nextPage}
+                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </nav>
                 </div>
               </div>
             </div>
