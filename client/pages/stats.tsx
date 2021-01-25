@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { useTable } from "react-table";
+import { useSortBy, useTable } from "react-table";
 
 export async function getServerSideProps({ query }) {
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/rushing_statistics";
@@ -65,7 +65,9 @@ export default function Stats({ stats }) {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data: memoizedData });
+  } = useTable({ columns, data: memoizedData }, useSortBy);
+
+  const firstPageRows = rows.slice(0, 20);
 
   return (
     <div
@@ -105,11 +107,20 @@ export default function Stats({ stats }) {
                               // Apply the header cell props
 
                               <th
-                                {...column.getHeaderProps()}
+                                {...column.getHeaderProps(
+                                  column.getSortByToggleProps()
+                                )}
                                 scope="col"
                                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                               >
                                 {column.render("Header")}
+                                <span>
+                                  {column.isSorted
+                                    ? column.isSortedDesc
+                                      ? " 🔽"
+                                      : " 🔼"
+                                    : ""}
+                                </span>
                               </th>
                             ))
                           }
@@ -120,7 +131,7 @@ export default function Stats({ stats }) {
                       {
                         // Loop over the table rows
 
-                        rows.map((row, index) => {
+                        firstPageRows.map((row, index) => {
                           // Prepare the row for display
 
                           prepareRow(row);
