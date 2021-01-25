@@ -2,7 +2,14 @@ import React from "react";
 import Head from "next/head";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { usePagination, useSortBy, useTable } from "react-table";
+import {
+  Column,
+  useFilters,
+  usePagination,
+  useSortBy,
+  useTable,
+} from "react-table";
+import { matchSorter } from "match-sorter";
 
 export async function getServerSideProps({ query }) {
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/rushing_statistics";
@@ -21,13 +28,73 @@ export async function getServerSideProps({ query }) {
   };
 }
 
+function DefaultColumnFilter({
+  column: { filterValue, preFilteredRows, setFilter },
+}) {
+  const count = preFilteredRows.length;
+
+  return (
+    <>
+      {" "}
+      <label htmlFor="email" className="sr-only">
+        Email
+      </label>
+      <input
+        type="text"
+        name="email"
+        id="email"
+        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+        value={filterValue || ""}
+        onChange={(e) => {
+          setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+        }}
+        placeholder={`Filter ${count} records...`}
+      />
+    </>
+  );
+}
+
+function fuzzyTextFilterFn(rows, id, filterValue) {
+  return matchSorter(rows, filterValue, { keys: [(row) => row.values[id]] });
+}
+
+// Let the table remove the filter if the string is empty
+fuzzyTextFilterFn.autoRemove = (val) => !val;
+
 export default function Stats({ stats }) {
+  const filterTypes = React.useMemo(
+    () => ({
+      // Add a new fuzzyTextFilterFn filter type.
+      fuzzyText: fuzzyTextFilterFn,
+      // Or, override the default text filter to use
+      // "startWith"
+      text: (rows, id, filterValue) => {
+        return rows.filter((row) => {
+          const rowValue = row.values[id];
+          return rowValue !== undefined
+            ? String(rowValue)
+                .toLowerCase()
+                .startsWith(String(filterValue).toLowerCase())
+            : true;
+        });
+      },
+    }),
+    []
+  );
+
   const memoizedData = React.useMemo(() => stats, [stats]);
 
-  const columns = React.useMemo(
+  const columns: Column[] = React.useMemo(
     () => [
       {
-        Header: "Player",
+        Header: ({ column }) => {
+          return (
+            <>
+              Player
+              <DefaultColumnFilter column={column} />
+            </>
+          );
+        },
         accessor: "player_name",
         Cell: ({ row: { original } }) => {
           return (
@@ -88,7 +155,13 @@ export default function Stats({ stats }) {
     setPageSize,
     state: { pageIndex, pageSize },
   } = useTable(
-    { columns, data: memoizedData, initialState: { pageIndex: 0 } },
+    {
+      columns,
+      data: memoizedData,
+      initialState: { pageIndex: 0 },
+      filterTypes,
+    },
+    useFilters,
     useSortBy,
     usePagination
   );
@@ -176,19 +249,11 @@ export default function Stats({ stats }) {
                   >
                     <div className="hidden sm:block">
                       <p className="text-sm text-gray-700">
-                        Showing{" "}
+                        Page{" "}
+                        <span className="font-medium">{pageIndex + 1}</span> of{" "}
                         <span className="font-medium">
-                          {pageIndex * pageSize + 1}
-                        </span>{" "}
-                        to{" "}
-                        <span className="font-medium">
-                          {(pageIndex + 1) * pageSize}
-                        </span>{" "}
-                        of{" "}
-                        <span className="font-medium">
-                          {memoizedData.length}
-                        </span>{" "}
-                        results
+                          {Math.max(pageCount, 1)}
+                        </span>
                       </p>
                     </div>
                     <div className="flex-1 flex justify-between sm:justify-end">
