@@ -5,6 +5,37 @@ This repo contains two subdirectories:
 - `api` is an Elixir back-end application
 - `client` is a NextJS front-end application
 
+## Quick Start
+
+First, you'll need to install the following:
+
+- PostgreSQL 13.1
+- Node 14.11.0
+- Elixir 1.11.1
+- Erlang 23.1.1
+
+Then clone the repo:
+
+```bash
+git https://github.com/a8t/rushing.git
+cd rushing
+```
+
+In the `api` directory:
+```bash
+mix setup
+
+mix phx.start
+```
+
+
+In the `client` directory:
+```bash
+yarn install
+
+yarn start
+```
+
 ## API
 `api` is an Elixir umbrella app. It contains three apps in the umbrella:
 

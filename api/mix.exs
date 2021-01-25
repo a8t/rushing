@@ -21,4 +21,16 @@ defmodule Api.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false}
     ]
   end
+
+  defp aliases do
+    [
+      setup: ["deps.get", "ecto.setup"],
+      "ecto.setup": [
+        "ecto.create",
+        "ecto.migrate",
+        "ingest_json ./apps/json_ingester/lib/ingester/rushing.json"
+      ],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+    ]
+  end
 end
