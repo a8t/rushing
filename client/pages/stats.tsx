@@ -41,19 +41,32 @@ export default function Stats({ stats }) {
             </div>
           );
         },
+        disableSortBy: true,
       },
-      { Header: "Att/G", accessor: "attempts" },
-      { Header: "Att", accessor: "attempts_per_game_average" },
-      { Header: "Yds", accessor: "total_yards" },
-      { Header: "Avg", accessor: "yards_per_attempt_average" },
-      { Header: "Yds/G", accessor: "yards_per_game" },
+      { Header: "Att/G", accessor: "attempts", disableSortBy: true },
+      {
+        Header: "Att",
+        accessor: "attempts_per_game_average",
+        disableSortBy: true,
+      },
+      { Header: "Yds", accessor: "total_yards", disableSortBy: true },
+      {
+        Header: "Avg",
+        accessor: "yards_per_attempt_average",
+        disableSortBy: true,
+      },
+      { Header: "Yds/G", accessor: "yards_per_game", disableSortBy: true },
       { Header: "TD", accessor: "total_rushing_touchdowns" },
       { Header: "Lng", accessor: "longest_rush" },
-      { Header: "1st", accessor: "first_downs" },
-      { Header: "1st%", accessor: "first_down_percentage" },
-      { Header: "20+", accessor: "over_twenty_yards" },
-      { Header: "40+", accessor: "over_forty_yards" },
-      { Header: "FUM", accessor: "fumbles" },
+      { Header: "1st", accessor: "first_downs", disableSortBy: true },
+      {
+        Header: "1st%",
+        accessor: "first_down_percentage",
+        disableSortBy: true,
+      },
+      { Header: "20+", accessor: "over_twenty_yards", disableSortBy: true },
+      { Header: "40+", accessor: "over_forty_yards", disableSortBy: true },
+      { Header: "FUM", accessor: "fumbles", disableSortBy: true },
     ],
 
     []
