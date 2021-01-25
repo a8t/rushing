@@ -17,7 +17,7 @@ export default function Stats() {
 
       <header className="py-10 bg-gray-800 pb-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-white">Rushing statistics</h1>
         </div>
       </header>
 
