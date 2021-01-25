@@ -7,6 +7,8 @@ defmodule RushingWeb.Router do
 
   scope "/api", RushingWeb do
     pipe_through :api
+
+    resources "/rushing_statistics", RushingStatisticController, only: [:index, :show]
   end
 
   # Enables LiveDashboard only for development
