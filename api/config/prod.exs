@@ -47,13 +47,6 @@ config :rushing_web, RushingWeb.Endpoint,
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
 
-config :rushing_web, RushingWeb.Endpoint,
-  # Possibly not needed, but doesn't hurt
-  http: [port: {:system, "PORT"}],
-  url: [host: System.get_env("APP_NAME") <> ".gigalixirapp.com", port: 443],
-  secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE"),
-  server: true
-
 config :database, Database.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
