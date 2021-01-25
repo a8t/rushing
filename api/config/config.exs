@@ -19,9 +19,11 @@ config :database, Database.Repo,
 config :database,
   ecto_repos: [Database.Repo]
 
+config :rushing_web,
+  generators: [context_app: :database]
 
 config :rushing_web,
-  generators: [context_app: false]
+  ecto_repos: [Database.Repo]
 
 # Configures the endpoint
 config :rushing_web, RushingWeb.Endpoint,
@@ -30,7 +32,6 @@ config :rushing_web, RushingWeb.Endpoint,
   render_errors: [view: RushingWeb.ErrorView, accepts: ~w(json), layout: false],
   pubsub_server: RushingWeb.PubSub,
   live_view: [signing_salt: "nF6VFXE2"]
-
 
 # Sample configuration:
 #
@@ -50,6 +51,8 @@ config :phoenix, :json_library, Jason
 
 # Don't generate models
 config :phoenix, :generators, model: false
+
+config :phoenix, :generators, migration: false
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
