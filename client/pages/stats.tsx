@@ -117,7 +117,7 @@ export default function Stats({ stats }) {
         accessor: "attempts_per_game_average",
         disableSortBy: true,
       },
-      { Header: "Yds", accessor: "total_yards", disableSortBy: true },
+      { Header: "Yds", accessor: "total_yards" },
       {
         Header: "Avg",
         accessor: "yards_per_attempt_average",
@@ -215,13 +215,7 @@ export default function Stats({ stats }) {
                               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
                               {column.render("Header")}
-                              <span>
-                                {column.isSorted
-                                  ? column.isSortedDesc
-                                    ? " 🔽"
-                                    : " 🔼"
-                                  : ""}
-                              </span>
+                              <span>{getSortSymbol(column)}</span>
                             </th>
                           ))}
                         </tr>
@@ -290,4 +284,15 @@ export default function Stats({ stats }) {
       <Footer />
     </div>
   );
+}
+
+function getSortSymbol(column) {
+  if (!column.canSort) {
+    return null;
+  }
+
+  if (!column.isSorted) {
+    return " ↕";
+  }
+  return column.isSortedDesc ? " ↓" : " ↑";
 }
