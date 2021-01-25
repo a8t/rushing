@@ -10,6 +10,7 @@ import {
   useTable,
 } from "react-table";
 import { matchSorter } from "match-sorter";
+import { CSVLink } from "react-csv";
 
 export async function getServerSideProps({ query }) {
   const url = process.env.NEXT_PUBLIC_API_URL + "/api/rushing_statistics";
@@ -144,6 +145,7 @@ export default function Stats({ stats }) {
     getTableBodyProps,
     headerGroups,
     prepareRow,
+    rows: filteredRows,
     page,
     canPreviousPage,
     canNextPage,
@@ -179,8 +181,15 @@ export default function Stats({ stats }) {
       {/* This example requires Tailwind CSS v2.0+ */}
 
       <header className="py-10 bg-gray-800 pb-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
           <h1 className="text-3xl font-bold text-white">Rushing statistics</h1>
+          <CSVLink
+            data={filteredRows.map((e) => e.values)}
+            className="ml-auto inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            <button type="button">Export CSV</button>
+          </CSVLink>
+          ;
         </div>
       </header>
 
