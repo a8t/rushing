@@ -17,7 +17,8 @@ First, you'll need to install the following:
 Then clone the repo:
 
 ```bash
-git https://github.com/a8t/rushing.git
+git clone https://github.com/a8t/rushing.git
+
 cd rushing
 ```
 
