@@ -26,7 +26,7 @@ In the `api` directory:
 ```bash
 mix setup
 
-mix phx.start
+mix phx.server
 ```
 
 
@@ -34,7 +34,7 @@ In the `client` directory:
 ```bash
 yarn install
 
-yarn start
+yarn dev
 ```
 
 ## API
