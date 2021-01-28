@@ -61,6 +61,25 @@ defmodule RushingWeb.RushingStatisticControllerTest do
       conn = get(conn, Routes.rushing_statistic_path(conn, :index, page: 2, page_size: 15))
       assert length(json_response(conn, 200)["data"]) == 5
     end
+
+    test "lists all rushing_statistics, filtered", %{conn: conn} do
+      # add 20 items to the DB
+      for i <- 1..20 do
+        {:ok, _rushing_statistic} =
+          Rushing.create_rushing_statistic(
+            Map.merge(@create_attrs, %{:player_name => "name#{i}"})
+          )
+      end
+
+      conn = get(conn, Routes.rushing_statistic_path(conn, :index, name_filter: "name17"))
+      assert length(json_response(conn, 200)["data"]) == 1
+
+      conn = get(conn, Routes.rushing_statistic_path(conn, :index, name_filter: "me2"))
+      assert length(json_response(conn, 200)["data"]) == 2
+
+      conn = get(conn, Routes.rushing_statistic_path(conn, :index, name_filter: "none"))
+      assert length(json_response(conn, 200)["data"]) == 0
+    end
   end
 
   # describe "create rushing_statistic" do

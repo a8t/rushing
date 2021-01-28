@@ -9,11 +9,13 @@ defmodule RushingWeb.RushingStatisticController do
   def index(conn, params) do
     page = Map.get(params, "page", 1)
     page_size = Map.get(params, "page_size", 10)
+    name_filter = Map.get(params, "name_filter", "")
 
     page =
       Rushing.list_rushing_statistics(:paged,
         page: page || 1,
-        page_size: page_size || 10
+        page_size: page_size || 10,
+        name_filter: name_filter
       )
 
     render(conn, "index.json",

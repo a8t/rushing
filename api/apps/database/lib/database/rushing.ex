@@ -21,8 +21,12 @@ defmodule Database.Rushing do
     Repo.all(RushingStatistic)
   end
 
-  def list_rushing_statistics(:paged, page: page, page_size: page_size) do
-    RushingStatistic
+  def list_rushing_statistics(:paged, page: page, page_size: page_size, name_filter: name_filter) do
+    query =
+      from rs in RushingStatistic,
+        where: ilike(rs.player_name, ^"%#{name_filter}%")
+
+    query
     |> Repo.paginate(%{page: page, page_size: page_size})
   end
 
@@ -52,8 +56,6 @@ defmodule Database.Rushing do
 
   """
   def create_rushing_statistic(attrs \\ %{}) do
-    IO.inspect(attrs)
-
     struct(%RushingStatistic{}, attrs)
     |> Repo.insert()
   end
