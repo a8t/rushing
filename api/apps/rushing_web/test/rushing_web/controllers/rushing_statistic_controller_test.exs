@@ -1,4 +1,6 @@
 defmodule RushingWeb.RushingStatisticControllerTest do
+  # Once the mode is manual, tests can also be async
+  use ExUnit.Case, async: true
   use RushingWeb.ConnCase
 
   alias Database.Rushing
@@ -80,6 +82,65 @@ defmodule RushingWeb.RushingStatisticControllerTest do
 
       conn = get(conn, Routes.rushing_statistic_path(conn, :index, name_filter: "none"))
       assert length(json_response(conn, 200)["data"]) == 0
+    end
+
+    test "sorting by total yards", %{conn: conn} do
+      # add 20 items to the DB
+      for i <- 1..20 do
+        {:ok, _rushing_statistic} =
+          Rushing.create_rushing_statistic(Map.merge(@create_attrs, %{:total_yards => i / 1}))
+      end
+
+      conn =
+        get(
+          conn,
+          Routes.rushing_statistic_path(conn, :index, page_size: 20, sort: "total_yards:desc")
+        )
+
+      assert List.first(json_response(conn, 200)["data"])["total_yards"] == 20.0
+      assert List.last(json_response(conn, 200)["data"])["total_yards"] == 1.0
+    end
+
+    test "sorting by total yards and longest rush", %{conn: conn} do
+      for i <- 1..3 do
+        for j <- 1..3 do
+          Rushing.create_rushing_statistic(
+            Map.merge(
+              @create_attrs,
+              %{:total_yards => i / 1, :total_rushing_touchdowns => j / 1}
+            )
+          )
+        end
+      end
+
+      sort_query = "total_yards:desc,total_rushing_touchdowns:asc"
+
+      conn = get(conn, Routes.rushing_statistic_path(conn, :index, sort: sort_query))
+
+      data = json_response(conn, 200)["data"]
+
+      first = List.first(data)
+      second = Enum.at(data, 1)
+      last = List.last(data)
+
+      # should be in the order 3:1, 3:2, 3:3, 2:1, 2:2, 2:3, 3:1, 3:2, 3:3
+      assert first["total_yards"] == 3.0
+      assert second["total_rushing_touchdowns"] == 2.0
+      assert first["total_rushing_touchdowns"] == 1.0
+      assert last["total_rushing_touchdowns"] == 3.0
+    end
+
+    test "bad sort", %{conn: conn} do
+      Rushing.create_rushing_statistic(@create_attrs)
+      Rushing.create_rushing_statistic(@create_attrs)
+
+      sort_query = "total_yards:desc,total_dfsdfsrushing_touchdowns:asc"
+
+      conn = get(conn, Routes.rushing_statistic_path(conn, :index, sort: sort_query))
+
+      data = json_response(conn, 200)["data"]
+
+      assert length(data) == 2
     end
   end
 

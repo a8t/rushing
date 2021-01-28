@@ -1,6 +1,8 @@
 defmodule RushingWeb.RushingStatisticController do
   use RushingWeb, :controller
 
+  alias RushingWeb.RushingStatisticController.Helper
+
   alias Database.Rushing
   alias Database.Rushing.RushingStatistic
 
@@ -10,12 +12,14 @@ defmodule RushingWeb.RushingStatisticController do
     page = Map.get(params, "page", 1)
     page_size = Map.get(params, "page_size", 10)
     name_filter = Map.get(params, "name_filter", "")
+    sort_kwlist = Helper.get_sort_kwlist(Map.get(params, "sort", ""))
 
     page =
       Rushing.list_rushing_statistics(:paged,
         page: page || 1,
         page_size: page_size || 10,
-        name_filter: name_filter
+        name_filter: name_filter,
+        sort: sort_kwlist
       )
 
     render(conn, "index.json",

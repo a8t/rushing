@@ -1,5 +1,7 @@
 defmodule RushingWeb.RushingStatisticController.Helper do
   @spec get_sort_kwlist(binary) :: [{atom(), atom()}]
+  def get_sort_kwlist(""), do: []
+
   def get_sort_kwlist(sort_query_string) do
     sort_query_string
     |> String.split(",")
@@ -19,7 +21,7 @@ defmodule RushingWeb.RushingStatisticController.Helper do
   end
 
   defp safe_string_to_atom(str) do
-    _valid_sort_keys = [:total_yards, :yards_per_attempt_average, :longest_rush]
+    _valid_sort_keys = [:total_yards, :total_rushing_touchdowns, :longest_rush]
     _valid_directions = [:asc, :desc]
 
     try do

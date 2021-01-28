@@ -21,10 +21,16 @@ defmodule Database.Rushing do
     Repo.all(RushingStatistic)
   end
 
-  def list_rushing_statistics(:paged, page: page, page_size: page_size, name_filter: name_filter) do
+  def list_rushing_statistics(:paged,
+        page: page,
+        page_size: page_size,
+        name_filter: name_filter,
+        sort: sort
+      ) do
     query =
       from rs in RushingStatistic,
-        where: ilike(rs.player_name, ^"%#{name_filter}%")
+        where: ilike(rs.player_name, ^"%#{name_filter}%"),
+        order_by: ^sort
 
     query
     |> Repo.paginate(%{page: page, page_size: page_size})
