@@ -17,3 +17,5 @@ config :database, Database.Repo,
 config :rushing_web, RushingWeb.Endpoint,
   http: [port: 4002],
   server: false
+
+config :logger, level: :error

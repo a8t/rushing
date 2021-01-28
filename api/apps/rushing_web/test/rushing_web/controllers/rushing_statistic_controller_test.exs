@@ -2,7 +2,6 @@ defmodule RushingWeb.RushingStatisticControllerTest do
   use RushingWeb.ConnCase
 
   alias Database.Rushing
-  alias Database.Rushing.RushingStatistic
 
   @create_attrs %{
     :player_name => "name",
@@ -21,8 +20,6 @@ defmodule RushingWeb.RushingStatisticControllerTest do
     :over_forty_yards => 3.0,
     :fumbles => 3.0
   }
-  @update_attrs %{}
-  @invalid_attrs %{}
 
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Database.Repo)
@@ -44,7 +41,7 @@ defmodule RushingWeb.RushingStatisticControllerTest do
     end
 
     test "lists all rushing_statistics after inserting", %{conn: conn} do
-      {:ok, rushing_statistic} = Rushing.create_rushing_statistic(@create_attrs)
+      {:ok, _rushing_statistic} = Rushing.create_rushing_statistic(@create_attrs)
 
       conn = get(conn, Routes.rushing_statistic_path(conn, :index))
       assert length(json_response(conn, 200)["data"]) == 1
@@ -53,7 +50,7 @@ defmodule RushingWeb.RushingStatisticControllerTest do
     test "lists all rushing_statistics, paginated", %{conn: conn} do
       # add 20 items to the DB
       for _i <- 1..20 do
-        {:ok, rushing_statistic} = Rushing.create_rushing_statistic(@create_attrs)
+        {:ok, _rushing_statistic} = Rushing.create_rushing_statistic(@create_attrs)
       end
 
       # assert that first page of 10 has 10 elements
@@ -121,8 +118,8 @@ defmodule RushingWeb.RushingStatisticControllerTest do
   #   end
   # end
 
-  defp create_rushing_statistic(_) do
-    rushing_statistic = fixture(:rushing_statistic)
-    %{rushing_statistic: rushing_statistic}
-  end
+  # defp create_rushing_statistic(_) do
+  #   rushing_statistic = fixture(:rushing_statistic)
+  #   %{rushing_statistic: rushing_statistic}
+  # end
 end

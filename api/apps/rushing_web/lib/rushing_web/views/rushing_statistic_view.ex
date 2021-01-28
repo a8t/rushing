@@ -8,8 +8,6 @@ defmodule RushingWeb.RushingStatisticView do
         total_pages: total_pages,
         total_entries: total_entries
       }) do
-    IO.inspect(rushing_statistics)
-
     %{
       data:
         render_many(rushing_statistics, RushingWeb.RushingStatisticView, "rushing_statistic.json"),
