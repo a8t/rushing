@@ -94,7 +94,7 @@ defmodule RushingWeb.RushingStatisticControllerTest do
       conn =
         get(
           conn,
-          Routes.rushing_statistic_path(conn, :index, page_size: 20, sort: "total_yards:desc")
+          Routes.rushing_statistic_path(conn, :index, page_size: 20, sort: "total_yards desc")
         )
 
       assert List.first(json_response(conn, 200)["data"])["total_yards"] == 20.0
@@ -113,7 +113,7 @@ defmodule RushingWeb.RushingStatisticControllerTest do
         end
       end
 
-      sort_query = "total_yards:desc,total_rushing_touchdowns:asc"
+      sort_query = "total_yards desc,total_rushing_touchdowns asc"
 
       conn = get(conn, Routes.rushing_statistic_path(conn, :index, sort: sort_query))
 
@@ -134,7 +134,7 @@ defmodule RushingWeb.RushingStatisticControllerTest do
       Rushing.create_rushing_statistic(@create_attrs)
       Rushing.create_rushing_statistic(@create_attrs)
 
-      sort_query = "total_yards:desc,total_dfsdfsrushing_touchdowns:asc"
+      sort_query = "total_yards desc,total_dfsdfsrushing_touchdowns asc"
 
       conn = get(conn, Routes.rushing_statistic_path(conn, :index, sort: sort_query))
 
@@ -146,19 +146,19 @@ defmodule RushingWeb.RushingStatisticControllerTest do
 
   describe "get_sort_kwlist" do
     test "works with one sort query param" do
-      sort_kwlist = Helper.get_sort_kwlist("total_yards:asc")
+      sort_kwlist = Helper.get_sort_kwlist("total_yards asc")
 
       assert length(sort_kwlist) == 1
     end
 
     test "works with multiple sort query params" do
-      sort_kwlist = Helper.get_sort_kwlist("total_yards:asc,longest_rush:desc")
+      sort_kwlist = Helper.get_sort_kwlist("total_yards asc,longest_rush desc")
 
       assert length(sort_kwlist) == 2
     end
 
     test "ignores bad sort query params" do
-      sort_kwlist = Helper.get_sort_kwlist("total_yards:asc,bad_field:desc")
+      sort_kwlist = Helper.get_sort_kwlist("total_yards asc,bad_field desc")
 
       assert length(sort_kwlist) == 1
     end

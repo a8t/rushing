@@ -12,7 +12,7 @@ defmodule RushingWeb.RushingStatisticController.Helper do
   defp to_atomized_tuple(string) do
     [sort_key, direction] =
       string
-      |> String.split(":")
+      |> String.split(" ")
 
     with {:ok, atomized_sort_key} <- safe_string_to_atom(sort_key),
          {:ok, atomized_direction} <- safe_string_to_atom(direction) do
