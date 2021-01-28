@@ -49,6 +49,21 @@ defmodule RushingWeb.RushingStatisticControllerTest do
       conn = get(conn, Routes.rushing_statistic_path(conn, :index))
       assert length(json_response(conn, 200)["data"]) == 1
     end
+
+    test "lists all rushing_statistics, paginated", %{conn: conn} do
+      # add 20 items to the DB
+      for _i <- 1..20 do
+        {:ok, rushing_statistic} = Rushing.create_rushing_statistic(@create_attrs)
+      end
+
+      # assert that first page of 10 has 10 elements
+      conn = get(conn, Routes.rushing_statistic_path(conn, :index, page: 1, page_size: 10))
+      assert length(json_response(conn, 200)["data"]) == 10
+
+      # assert that 2nd page of 15 has 5 elements
+      conn = get(conn, Routes.rushing_statistic_path(conn, :index, page: 2, page_size: 15))
+      assert length(json_response(conn, 200)["data"]) == 5
+    end
   end
 
   # describe "create rushing_statistic" do

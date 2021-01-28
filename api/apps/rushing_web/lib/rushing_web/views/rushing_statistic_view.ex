@@ -1,10 +1,22 @@
 defmodule RushingWeb.RushingStatisticView do
   use RushingWeb, :view
 
-  def render("index.json", %{rushing_statistics: rushing_statistics}) do
+  def render("index.json", %{
+        rushing_statistics: rushing_statistics,
+        page_number: page_number,
+        page_size: page_size,
+        total_pages: total_pages,
+        total_entries: total_entries
+      }) do
+    IO.inspect(rushing_statistics)
+
     %{
       data:
-        render_many(rushing_statistics, RushingWeb.RushingStatisticView, "rushing_statistic.json")
+        render_many(rushing_statistics, RushingWeb.RushingStatisticView, "rushing_statistic.json"),
+      page_number: page_number,
+      page_size: page_size,
+      total_pages: total_pages,
+      total_entries: total_entries
     }
   end
 

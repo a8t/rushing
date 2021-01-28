@@ -6,9 +6,23 @@ defmodule RushingWeb.RushingStatisticController do
 
   action_fallback RushingWeb.FallbackController
 
-  def index(conn, _params) do
-    rushing_statistics = Rushing.list_rushing_statistics()
-    render(conn, "index.json", rushing_statistics: rushing_statistics)
+  def index(conn, params) do
+    page = Map.get(params, "page", 1)
+    page_size = Map.get(params, "page_size", 10)
+
+    page =
+      Rushing.list_rushing_statistics(:paged,
+        page: page || 1,
+        page_size: page_size || 10
+      )
+
+    render(conn, "index.json",
+      rushing_statistics: page.entries,
+      page_number: page.page_number,
+      page_size: page.page_size,
+      total_pages: page.total_pages,
+      total_entries: page.total_entries
+    )
   end
 
   def create(conn, %{"rushing_statistic" => rushing_statistic_params}) do

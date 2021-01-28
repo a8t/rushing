@@ -21,6 +21,11 @@ defmodule Database.Rushing do
     Repo.all(RushingStatistic)
   end
 
+  def list_rushing_statistics(:paged, page: page, page_size: page_size) do
+    RushingStatistic
+    |> Repo.paginate(%{page: page, page_size: page_size})
+  end
+
   @doc """
   Gets a single rushing_statistic.
 
