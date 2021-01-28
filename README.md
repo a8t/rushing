@@ -63,6 +63,6 @@ Right now, the app gets every single database record anytime a user looks at a t
 
 My plan is the following:
 
-1. Turn pagination, filtering, sorting into URL query params on the client (why? so that users can go back to the same URL and get the same results instead of re-filtering and sorting every time)
+1. ~~Turn pagination, filtering, sorting into URL query params on the client (why? so that users can go back to the same URL and get the same results instead of re-filtering and sorting every time)~~ added to the API!
 2. Use URL params for getting paginated, filtered, sorted results from the API instead of fetching all records and getting them from the front end 🤪
 3. Add a "change page size" feature
