@@ -2,13 +2,12 @@ import React from "react";
 import Head from "next/head";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import { Column, useSortBy, useTable } from "react-table";
-import { matchSorter } from "match-sorter";
+import { Column, useTable } from "react-table";
 import { CSVLink } from "react-csv";
 
-import { useRouter } from "next/router";
 import { TablePagination } from "../components/TablePagination";
 import { PlayerNameFilter } from "../components/PlayerNameFilter";
+import { SortableColumnHeader } from "../components/SortableColumnHeader";
 
 export async function getServerSideProps(props) {
   const params = new URLSearchParams(props.query);
@@ -63,36 +62,46 @@ export default function Stats({
             </div>
           );
         },
-        disableSortBy: true,
       },
-      { Header: "Att/G", accessor: "attempts", disableSortBy: true },
+      { Header: "Att/G", accessor: "attempts" },
       {
         Header: "Att",
         accessor: "attempts_per_game_average",
-        disableSortBy: true,
       },
-      { Header: "Yds", accessor: "total_yards", disableSortBy: false },
+      {
+        Header: () => (
+          <SortableColumnHeader label="Yds" fieldName="total_yards" />
+        ),
+        accessor: "total_yards",
+      },
       {
         Header: "Avg",
         accessor: "yards_per_attempt_average",
-        disableSortBy: true,
       },
-      { Header: "Yds/G", accessor: "yards_per_game", disableSortBy: true },
+      { Header: "Yds/G", accessor: "yards_per_game" },
       {
-        Header: "TD",
+        Header: () => (
+          <SortableColumnHeader
+            label="TD"
+            fieldName="total_rushing_touchdowns"
+          />
+        ),
         accessor: "total_rushing_touchdowns",
-        disableSortBy: false,
       },
-      { Header: "Lng", accessor: "longest_rush", disableSortBy: false },
-      { Header: "1st", accessor: "first_downs", disableSortBy: true },
+      {
+        Header: () => (
+          <SortableColumnHeader label="Lng" fieldName="longest_rush" />
+        ),
+        accessor: "longest_rush",
+      },
+      { Header: "1st", accessor: "first_downs" },
       {
         Header: "1st%",
         accessor: "first_down_percentage",
-        disableSortBy: true,
       },
-      { Header: "20+", accessor: "over_twenty_yards", disableSortBy: true },
-      { Header: "40+", accessor: "over_forty_yards", disableSortBy: true },
-      { Header: "FUM", accessor: "fumbles", disableSortBy: true },
+      { Header: "20+", accessor: "over_twenty_yards" },
+      { Header: "40+", accessor: "over_forty_yards" },
+      { Header: "FUM", accessor: "fumbles" },
     ],
 
     []
@@ -104,13 +113,10 @@ export default function Stats({
     headerGroups,
     prepareRow,
     rows,
-  } = useTable(
-    {
-      columns,
-      data: memoizedData,
-    },
-    useSortBy
-  );
+  } = useTable({
+    columns,
+    data: memoizedData,
+  });
 
   return (
     <div
@@ -157,14 +163,11 @@ export default function Stats({
                         <tr {...headerGroup.getHeaderGroupProps()}>
                           {headerGroup.headers.map((column) => (
                             <th
-                              {...column.getHeaderProps(
-                                column.getSortByToggleProps()
-                              )}
+                              {...column.getHeaderProps()}
                               scope="col"
                               className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                             >
                               {column.render("Header")}
-                              <span>{getSortSymbol(column)}</span>
                             </th>
                           ))}
                         </tr>
@@ -209,15 +212,4 @@ export default function Stats({
       <Footer />
     </div>
   );
-}
-
-function getSortSymbol(column) {
-  if (!column.canSort) {
-    return null;
-  }
-
-  if (!column.isSorted) {
-    return " ↕";
-  }
-  return column.isSortedDesc ? " ↓" : " ↑";
 }
