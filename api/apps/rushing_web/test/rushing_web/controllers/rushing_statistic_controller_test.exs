@@ -2,6 +2,7 @@ defmodule RushingWeb.RushingStatisticControllerTest do
   use RushingWeb.ConnCase
 
   alias Database.Rushing
+  alias RushingWeb.RushingStatisticController.Helper
 
   @create_attrs %{
     :player_name => "name",
@@ -79,6 +80,26 @@ defmodule RushingWeb.RushingStatisticControllerTest do
 
       conn = get(conn, Routes.rushing_statistic_path(conn, :index, name_filter: "none"))
       assert length(json_response(conn, 200)["data"]) == 0
+    end
+  end
+
+  describe "get_sort_kwlist" do
+    test "works with one sort query param" do
+      sort_kwlist = Helper.get_sort_kwlist("total_yards:asc")
+
+      assert length(sort_kwlist) == 1
+    end
+
+    test "works with multiple sort query params" do
+      sort_kwlist = Helper.get_sort_kwlist("total_yards:asc,longest_rush:desc")
+
+      assert length(sort_kwlist) == 2
+    end
+
+    test "ignores bad sort query params" do
+      sort_kwlist = Helper.get_sort_kwlist("total_yards:asc,bad_field:desc")
+
+      assert length(sort_kwlist) == 1
     end
   end
 
