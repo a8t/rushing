@@ -2,18 +2,19 @@ import React from "react";
 import Head from "next/head";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
-import {
-  Column,
-  useFilters,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
+import { Column, useFilters, useSortBy, useTable } from "react-table";
 import { matchSorter } from "match-sorter";
 import { CSVLink } from "react-csv";
 
-export async function getServerSideProps({ query }) {
-  const url = process.env.NEXT_PUBLIC_API_URL + "/api/rushing_statistics";
+import { useRouter } from "next/router";
+import { TablePagination } from "../components/TablePagination";
+
+export async function getServerSideProps(props) {
+  const params = new URLSearchParams(props.query);
+  const url = `${
+    process.env.NEXT_PUBLIC_API_URL
+  }/api/rushing_statistics?${params.toString()}`;
+
   const res = await fetch(url);
 
   const data = await res.json();
@@ -25,7 +26,13 @@ export async function getServerSideProps({ query }) {
   }
 
   return {
-    props: { stats: data.data }, // will be passed to the page component as props
+    props: {
+      stats: data.data,
+      pageNumber: data.page_number,
+      pageSize: data.page_size,
+      totalEntries: data.total_entries,
+      totalPages: data.total_pages,
+    }, // will be passed to the page component as props
   };
 }
 
@@ -36,7 +43,6 @@ function DefaultColumnFilter({
 
   return (
     <>
-      {" "}
       <label htmlFor="email" className="sr-only">
         Email
       </label>
@@ -62,7 +68,13 @@ function fuzzyTextFilterFn(rows, id, filterValue) {
 // Let the table remove the filter if the string is empty
 fuzzyTextFilterFn.autoRemove = (val) => !val;
 
-export default function Stats({ stats }) {
+export default function Stats({
+  stats,
+  pageNumber,
+  pageSize,
+  totalEntries,
+  totalPages,
+}) {
   const filterTypes = React.useMemo(
     () => ({
       // Add a new fuzzyTextFilterFn filter type.
@@ -117,15 +129,19 @@ export default function Stats({ stats }) {
         accessor: "attempts_per_game_average",
         disableSortBy: true,
       },
-      { Header: "Yds", accessor: "total_yards" },
+      { Header: "Yds", accessor: "total_yards", disableSortBy: false },
       {
         Header: "Avg",
         accessor: "yards_per_attempt_average",
         disableSortBy: true,
       },
       { Header: "Yds/G", accessor: "yards_per_game", disableSortBy: true },
-      { Header: "TD", accessor: "total_rushing_touchdowns" },
-      { Header: "Lng", accessor: "longest_rush" },
+      {
+        Header: "TD",
+        accessor: "total_rushing_touchdowns",
+        disableSortBy: false,
+      },
+      { Header: "Lng", accessor: "longest_rush", disableSortBy: false },
       { Header: "1st", accessor: "first_downs", disableSortBy: true },
       {
         Header: "1st%",
@@ -146,26 +162,14 @@ export default function Stats({ stats }) {
     headerGroups,
     prepareRow,
     rows: filteredRows,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data: memoizedData,
-      initialState: { pageIndex: 0 },
       filterTypes,
     },
     useFilters,
-    useSortBy,
-    usePagination
+    useSortBy
   );
 
   return (
@@ -199,6 +203,10 @@ export default function Stats({ stats }) {
             <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                  <TablePagination
+                    currentPage={pageNumber}
+                    totalPages={totalPages}
+                  />
                   <table
                     className="min-w-full divide-y divide-gray-200"
                     {...getTableProps()}
@@ -222,7 +230,7 @@ export default function Stats({ stats }) {
                       ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
-                      {page.map((row, index) => {
+                      {filteredRows.map((row, index) => {
                         prepareRow(row);
                         const isDarkRow = index % 2 === 0;
 
@@ -246,34 +254,10 @@ export default function Stats({ stats }) {
                       })}
                     </tbody>
                   </table>
-                  <nav
-                    className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
-                    aria-label="Pagination"
-                  >
-                    <div className="hidden sm:block">
-                      <p className="text-sm text-gray-700">
-                        Page{" "}
-                        <span className="font-medium">{pageIndex + 1}</span> of{" "}
-                        <span className="font-medium">
-                          {Math.max(pageCount, 1)}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="flex-1 flex justify-between sm:justify-end">
-                      <button
-                        onClick={previousPage}
-                        className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                      >
-                        Previous
-                      </button>
-                      <button
-                        onClick={nextPage}
-                        className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </nav>
+                  <TablePagination
+                    currentPage={pageNumber}
+                    totalPages={totalPages}
+                  />
                 </div>
               </div>
             </div>
