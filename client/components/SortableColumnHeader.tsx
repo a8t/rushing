@@ -1,4 +1,5 @@
 import { merge, omit } from "lodash";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 /**
@@ -9,23 +10,25 @@ export function SortableColumnHeader({ label, fieldName }) {
   const router = useRouter();
   const { sort: currentSortQueryParam } = router.query;
 
-  const handleSortClick = () => {
-    const existingQuery = router.query;
+  const existingQuery = router.query;
 
-    const nextSort = getNextSort(currentSortQueryParam, fieldName);
-
-    router.push({
-      pathname: router.pathname,
-      query: nextSort
-        ? merge(existingQuery, { sort: nextSort })
-        : omit(existingQuery, ["sort"]),
-    });
-  };
+  const nextSort = getNextSort(currentSortQueryParam, fieldName);
 
   return (
-    <button onClick={handleSortClick}>
-      {label} {getSortSymbol(currentSortQueryParam, fieldName)}
-    </button>
+    <Link
+      passHref
+      href={{
+        pathname: router.pathname,
+        query: nextSort
+          ? merge(existingQuery, { sort: nextSort })
+          : omit(existingQuery, ["sort"]),
+      }}
+      scroll={false}
+    >
+      <a>
+        {label} {getSortSymbol(currentSortQueryParam, fieldName)}
+      </a>
+    </Link>
   );
 }
 
