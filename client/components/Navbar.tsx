@@ -9,7 +9,9 @@ export function cn(...args) {
 function ActiveLink({ children, href }) {
   const router = useRouter();
   return (
-    <Link href={href}>{children({ isActive: router.pathname === href })}</Link>
+    <Link passHref href={href}>
+      {children({ isActive: router.pathname === href })}
+    </Link>
   );
 }
 
@@ -17,7 +19,7 @@ function DesktopLink({ children, href }) {
   return (
     <ActiveLink href={href}>
       {({ isActive }) => (
-        <span
+        <a
           className={cn(
             "px-3 py-2 rounded-md text-sm font-medium",
             isActive
@@ -26,7 +28,7 @@ function DesktopLink({ children, href }) {
           )}
         >
           {children}
-        </span>
+        </a>
       )}
     </ActiveLink>
   );
@@ -35,7 +37,7 @@ function MobileLink({ children, href }) {
   return (
     <ActiveLink href={href}>
       {({ isActive }) => (
-        <span
+        <a
           className={cn(
             "block px-3 py-2 rounded-md text-base font-medium",
             isActive
@@ -44,7 +46,7 @@ function MobileLink({ children, href }) {
           )}
         >
           {children}
-        </span>
+        </a>
       )}
     </ActiveLink>
   );
