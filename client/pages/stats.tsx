@@ -160,6 +160,7 @@ export default function Stats({
                       totalPages={totalPages}
                     />
                   ) : null}
+
                   <table
                     className="min-w-full divide-y divide-gray-200"
                     {...getTableProps()}
@@ -180,6 +181,16 @@ export default function Stats({
                       ))}
                     </thead>
                     <tbody {...getTableBodyProps()}>
+                      {rows.length === 0 ? (
+                        <tr className="relative h-24">
+                          <td className="bg-gray-50 absolute inset-0 flex">
+                            <div className="text-gray-500 m-auto">
+                              Sorry, there are no results! Try changing the
+                              filter.
+                            </div>
+                          </td>
+                        </tr>
+                      ) : null}
                       {rows.map((row, index) => {
                         prepareRow(row);
                         const isDarkRow = index % 2 === 0;
