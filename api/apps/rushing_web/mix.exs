@@ -45,6 +45,7 @@ defmodule RushingWeb.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:mix_test_watch, "~> 1.0", only: :dev, runtime: false},
+      {:csv, "~> 2.4"},
       {:database, in_umbrella: true}
     ]
   end

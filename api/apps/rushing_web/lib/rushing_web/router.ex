@@ -9,6 +9,8 @@ defmodule RushingWeb.Router do
     pipe_through :api
 
     resources "/rushing_statistics", RushingStatisticController, only: [:index, :show]
+
+    get "/csv", RushingStatisticController, :export_csv
   end
 
   # Enables LiveDashboard only for development

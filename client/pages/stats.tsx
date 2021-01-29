@@ -3,11 +3,11 @@ import Head from "next/head";
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Column, useTable } from "react-table";
-import { CSVLink } from "react-csv";
 
 import { TablePagination } from "../components/TablePagination";
 import { PlayerNameFilter } from "../components/PlayerNameFilter";
 import { SortableColumnHeader } from "../components/SortableColumnHeader";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(props) {
   const params = new URLSearchParams(props.query);
@@ -118,6 +118,11 @@ export default function Stats({
     data: memoizedData,
   });
 
+  const router = useRouter();
+
+  const queryString = Object.entries(router.query)
+    .map(([key, value]) => key + "=" + value)
+    .join("&");
   return (
     <div
       style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
@@ -134,13 +139,12 @@ export default function Stats({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex">
           <h1 className="text-3xl font-bold text-white">Rushing statistics</h1>
           <PlayerNameFilter />
-          <CSVLink
-            data={rows.map((e) => e.values)}
+          <a
+            href={`${process.env.NEXT_PUBLIC_API_URL}/api/csv?${queryString}`}
             className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <button type="button">Export CSV</button>
-          </CSVLink>
-          ;
+          </a>
         </div>
       </header>
 

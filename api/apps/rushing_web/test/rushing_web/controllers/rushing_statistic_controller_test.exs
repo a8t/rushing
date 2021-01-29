@@ -164,6 +164,24 @@ defmodule RushingWeb.RushingStatisticControllerTest do
     end
   end
 
+  describe "get csv" do
+    test "works", %{conn: conn} do
+      {:ok, _rushing_statistic} = Rushing.create_rushing_statistic(@create_attrs)
+
+      conn = get(conn, Routes.rushing_statistic_path(conn, :export_csv))
+
+      assert is_binary(conn.resp_body) == true
+
+      [headers, body] =
+        conn.resp_body
+        |> String.split("\n")
+        |> Enum.take(2)
+
+      assert List.first(String.split(headers, ",")) == "player_name"
+      assert List.first(String.split(body, ",")) == "name"
+    end
+  end
+
   # describe "create rushing_statistic" do
   #   test "renders rushing_statistic when data is valid", %{conn: conn} do
   #     conn =

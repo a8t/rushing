@@ -44,10 +44,21 @@ defmodule RushingWeb.RushingStatisticController do
     end
   end
 
-  # def show(conn, %{"id" => id}) do
-  #   rushing_statistic = Rushing.get_rushing_statistic!(id)
-  #   render(conn, "show.json", rushing_statistic: rushing_statistic)
-  # end
+  def export_csv(conn, params) do
+    name_filter = Map.get(params, "name_filter", "")
+    sort_kwlist = Helper.get_sort_kwlist(Map.get(params, "sort", ""))
+
+    rushing_statistics =
+      Rushing.list_rushing_statistics(:unpaged,
+        name_filter: name_filter,
+        sort: sort_kwlist
+      )
+
+    conn
+    |> put_resp_content_type("text/csv")
+    |> put_resp_header("content-disposition", "attachment; filename=\"Rushing stats.csv\"")
+    |> render("rushing_statistic.csv", rushing_statistics: rushing_statistics)
+  end
 
   # def update(conn, %{"id" => id, "rushing_statistic" => rushing_statistic_params}) do
   #   rushing_statistic = Rushing.get_rushing_statistic!(id)

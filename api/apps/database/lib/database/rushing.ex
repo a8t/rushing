@@ -36,6 +36,19 @@ defmodule Database.Rushing do
     |> Repo.paginate(%{page: page, page_size: page_size})
   end
 
+  def list_rushing_statistics(:unpaged,
+        name_filter: name_filter,
+        sort: sort
+      ) do
+    query =
+      from rs in RushingStatistic,
+        where: ilike(rs.player_name, ^"%#{name_filter}%"),
+        order_by: ^sort
+
+    query
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single rushing_statistic.
 
